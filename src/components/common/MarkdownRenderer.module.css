@@ -1,0 +1,49 @@
+.markdown-container {
+  background-color: #f4f4f4;
+  border-radius: 8px;
+  padding: 1.5rem;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.markdown-h1 {
+  color: black;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.5rem;
+}
+
+.markdown-h2 {
+  color: black;
+}
+
+.markdown-h3 {
+  color: black;
+}
+
+.markdown-h4 {
+  color: black;
+}
+
+.markdown-h5 {
+  color: black;
+}
+
+.markdown-h6 {
+  color: black;
+}
+
+.markdown-p {
+  color: black;
+}
+
+.markdown-a {
+  color: black;
+  text-decoration: underline;
+}
+
+.markdown-code {
+  color: black;
+  background-color: #f4f4f4;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+}
