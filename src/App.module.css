@@ -1,19 +1,115 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
 .app-container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  background-color: var(--background-light);
-}
-
-.content-container {
-  display: flex;
-  align-items: start;
-  gap: 1.5rem;
+  height: 100vh;
   width: 100%;
+  overflow: hidden;
 }
 
-@media (max-width: 768px) {
-  .content-container {
-    flex-direction: column;
-  }
+.hero-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  background-color: var(--light);
+  padding: 20px;
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.hero-title {
+  font-size: 2.5rem;
+  text-align: center;
+}
+
+.loading-text {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1rem;
+  z-index: 10;
+}
+
+.error-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--light);
+  padding: 20px;
+  box-sizing: border-box;
+  position: absolute;
+  top: 100vh;
+  left: 0;
+  text-align: center;
+}
+
+.error-content {
+  background-color: #96b6c5;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 100%;
+  color: white;
+}
+
+.error-content h2 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.error-content p {
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.error-retry-button {
+  background-color: var(--yellow);
+  color: var(--dark);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.error-retry-button:hover {
+  background-color: #ffd700;
+}
+
+.content-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--light);
+  padding: 20px;
+  box-sizing: border-box;
+  position: absolute;
+  top: 100vh;
+  left: 0;
+}
+
+.content-wrapper {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 }

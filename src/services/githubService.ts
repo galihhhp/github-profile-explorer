@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { GitHubUser, GitHubRepoWithReadme } from '../types/github.types';
+import axios, { AxiosError } from 'axios';
+import { GithubUser, GithubRepoWithReadme } from '../types/github.types';
 
 const GITHUB_API_BASE = 'https://api.github.com';
 
@@ -10,18 +10,41 @@ const axiosInstance = axios.create({
   }
 });
 
+const handleGitHubError = (error: unknown, context: string): never => {
+  if (axios.isAxiosError(error)) {
+    const axiosError = error as AxiosError;
+
+    if (axiosError.response) {
+      switch (axiosError.response.status) {
+        case 404:
+          throw new Error(`User not found: ${context}`);
+        case 403:
+          throw new Error('GitHub API rate limit exceeded. Please try again later.');
+        case 401:
+          throw new Error('Authentication failed. Please check your credentials.');
+        default:
+          throw new Error(`GitHub API error: ${axiosError.response.status} - ${context}`);
+      }
+    } else if (axiosError.request) {
+      throw new Error('No response received from GitHub. Check your internet connection.');
+    }
+  }
+
+  throw new Error(`Unexpected error: ${context}`);
+};
+
 export const githubService = {
-  async getUser(username: string): Promise<GitHubUser> {
+  async getUser(username: string): Promise<GithubUser> {
     try {
       const response = await axiosInstance.get(`/users/${username}`);
       return response.data;
     } catch (error) {
-      console.error(`Failed to fetch user: ${username}`, error);
-      throw new Error(`Failed to fetch user: ${username}`);
+      handleGitHubError(error, `Fetching user: ${username}`);
     }
+    throw new Error('Unreachable code');
   },
 
-  async getUserRepos(username: string): Promise<GitHubRepoWithReadme[]> {
+  async getUserRepos(username: string): Promise<GithubRepoWithReadme[]> {
     try {
       const response = await axiosInstance.get(`/users/${username}/repos`, {
         params: {
@@ -31,11 +54,12 @@ export const githubService = {
       });
 
       const reposWithReadmes = await Promise.all(
-        response.data.map(async (repo: GitHubRepoWithReadme) => {
+        response.data.map(async (repo: GithubRepoWithReadme) => {
           try {
             const readmeResponse = await axiosInstance.get(`/repos/${username}/${repo.name}/readme`);
             repo.readme = atob(readmeResponse.data.content);
-          } catch {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          } catch (error) {
             repo.readme = '';
           }
           return repo;
@@ -44,8 +68,8 @@ export const githubService = {
 
       return reposWithReadmes;
     } catch (error) {
-      console.error(`Failed to fetch repos for user: ${username}`, error);
-      throw new Error(`Failed to fetch repos for user: ${username}`);
+      handleGitHubError(error, `Fetching repos for user: ${username}`);
     }
+    throw new Error('Unreachable code');
   }
 };

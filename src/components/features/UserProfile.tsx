@@ -1,9 +1,9 @@
 import React from "react";
 import styles from "./UserProfile.module.css";
-import { GitHubUser } from "../../types/github.types";
+import { GithubUser } from "../../types/github.types";
 
 interface UserProfileProps {
-  user: GitHubUser;
+  user: GithubUser;
 }
 
 export const UserProfile: React.FC<UserProfileProps> = ({ user }) => {

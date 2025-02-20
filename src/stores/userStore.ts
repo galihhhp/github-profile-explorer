@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 import { githubService } from '../services/githubService';
-import { GitHubUser, GitHubRepoWithReadme } from '../types/github.types';
+import { GithubUser, GithubRepoWithReadme } from '../types/github.types';
 
 interface UserState {
-  user: GitHubUser | null;
-  repos: GitHubRepoWithReadme[];
+  user: GithubUser | null;
+  repos: GithubRepoWithReadme[];
   loading: boolean;
   error: string | null;
   fetchUserData: (username: string | null) => Promise<void>;
@@ -39,14 +39,17 @@ export const useUserStore = create<UserState>((set) => ({
       set({
         user: userData,
         repos: userReposWithReadmes,
-        loading: false
+        loading: false,
+        error: userReposWithReadmes.length === 0
+          ? `No repositories found for ${username}`
+          : null
       });
     } catch (err) {
       set({
-        error: err instanceof Error
-          ? err.message
-          : 'Failed to fetch GitHub user data',
-        loading: false
+        error: err instanceof Error ? err.message : 'An unexpected error occurred',
+        loading: false,
+        user: null,
+        repos: []
       });
     }
   },

@@ -1,4 +1,4 @@
-export interface GitHubUser {
+export interface GithubUser {
   login: string;
   name: string;
   avatar_url: string;
@@ -9,7 +9,7 @@ export interface GitHubUser {
   html_url: string;
 }
 
-export interface GitHubRepo {
+export interface GithubRepo {
   id: number;
   name: string;
   full_name: string;
@@ -19,6 +19,6 @@ export interface GitHubRepo {
   language?: string;
 }
 
-export interface GitHubRepoWithReadme extends GitHubRepo {
+export interface GithubRepoWithReadme extends GithubRepo {
   readme?: string;
 }

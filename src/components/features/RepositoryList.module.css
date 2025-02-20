@@ -1,20 +1,10 @@
-.repository-container {
-  width: 100%;
-  background-color: white;
-  border-radius: 8px;
-  padding: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
 .repository-list {
   width: 100%;
+  margin-bottom: 1rem;
 }
 
 .repository-card {
-  background-color: #f9f9f9;
-  border-radius: 4px;
-  margin-bottom: 0.5rem;
-  border: 1px solid #e2e8f0;
+  background-color: #96b6c5;
   overflow: hidden;
 }
 
@@ -27,23 +17,29 @@
   user-select: none;
 }
 
+.repository-header a {
+  color: white;
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
 .toggle-icon {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #666;
+  color: white;
   transition: transform 0.3s ease, color 0.3s ease;
 }
 
 .repository-details {
   display: none;
   padding: 1rem;
-  background-color: white;
-  border-top: 1px solid #e2e8f0;
+  background-color: var(--light);
+  border: 3px solid #96b6c5;
   animation: slideDown 0.3s ease;
 }
 
 .repository-card.active {
-  border-color: #3182ce;
+  border-color: var(--yellow);
 }
 
 .repository-card.active .repository-details {
@@ -52,7 +48,6 @@
 
 .repository-card.active .toggle-icon {
   transform: rotate(180deg);
-  color: #3182ce;
 }
 
 .readme-content {
@@ -62,7 +57,7 @@
 .repo-details {
   display: flex;
   justify-content: space-between;
-  color: #666;
+  color: var(--dark);
   margin-top: 0.5rem;
   flex-wrap: wrap;
 }
