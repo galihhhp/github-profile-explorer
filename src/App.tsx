@@ -17,6 +17,9 @@ const App: React.FC = () => {
   );
 
   const handleSearch = (username: string) => {
+    if (!username) return;
+    if (username.trim() === paramValue) return;
+
     updateSearchParams(username);
   };
 

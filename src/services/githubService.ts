@@ -6,7 +6,8 @@ const GITHUB_API_BASE = 'https://api.github.com';
 const axiosInstance = axios.create({
   baseURL: GITHUB_API_BASE,
   headers: {
-    'Accept': 'application/vnd.github.v3+json'
+    'Accept': 'application/vnd.github.v3+json',
+    "Authorization": `Bearer ${import.meta.env.VITE_GITHUB_TOKEN}`,
   }
 });
 
