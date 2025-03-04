@@ -99,3 +99,16 @@
     padding-right: 0;
   }
 }
+
+.repositoryHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.repositoryStats {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+

@@ -3,13 +3,23 @@ import styles from "./RepositoryList.module.css";
 import theme from "../../styles/theme.module.css";
 import { MarkdownRenderer } from "../common/MarkdownRenderer";
 import { GithubRepoWithReadme } from "../../types/github.types";
+import Pagination from "../common/Pagination";
 
 interface RepositoryListProps {
   repositories: GithubRepoWithReadme[];
+  pagination: {
+    currentPage: number;
+    perPage: number;
+    totalCount: number;
+    totalPages: number;
+  };
+  onPageChange: (page: number) => void;
 }
 
-export const RepositoryList: React.FC<RepositoryListProps> = ({
+const RepositoryList: React.FC<RepositoryListProps> = ({
   repositories,
+  pagination,
+  onPageChange,
 }) => {
   const [activeRepoId, setActiveRepoId] = useState<number | null>(
     repositories.length > 0 ? repositories[0].id : null
@@ -20,8 +30,14 @@ export const RepositoryList: React.FC<RepositoryListProps> = ({
   };
 
   return (
-    <div className={`${theme.container}`}>
-      <h2 className={theme["gradient-heading"]}>Repositories</h2>
+    <div className={theme.container}>
+      <div className={styles.repositoryHeader}>
+        <h2 className={theme["gradient-heading"]}>Repositories</h2>
+        <div className={styles.repositoryStats}>
+          Showing {repositories.length} of {pagination.totalCount} repositories
+        </div>
+      </div>
+
       {repositories.map((repo) => (
         <div
           key={repo.id}
@@ -60,6 +76,14 @@ export const RepositoryList: React.FC<RepositoryListProps> = ({
           </div>
         </div>
       ))}
+
+      <Pagination
+        currentPage={pagination.currentPage}
+        totalPages={pagination.totalPages}
+        onPageChange={onPageChange}
+      />
     </div>
   );
 };
+
+export default RepositoryList;

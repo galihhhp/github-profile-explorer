@@ -114,7 +114,6 @@ export const ContributionDashboard: React.FC<ContributionDashboardProps> = ({
         </h2>
       </div>
 
-      {/* Summary Stats */}
       <div className={styles["stats-summary"]}>
         <div className={styles["stat-card"]}>
           <h3 className={theme["section-heading"]}>Repositories</h3>
@@ -134,7 +133,6 @@ export const ContributionDashboard: React.FC<ContributionDashboardProps> = ({
         </div>
       </div>
 
-      {/* Language Distribution */}
       <div
         className={`${styles["chart-section"]} ${styles["pie-chart-section"]}`}>
         <h3>Language Distribution</h3>
@@ -173,7 +171,6 @@ export const ContributionDashboard: React.FC<ContributionDashboardProps> = ({
         )}
       </div>
 
-      {/* Commit Frequency Chart */}
       <div
         className={`${styles["chart-section"]} ${styles["commit-activity-section"]}`}>
         <h3>Commit Activity (Last 30 Days)</h3>
@@ -211,7 +208,6 @@ export const ContributionDashboard: React.FC<ContributionDashboardProps> = ({
         )}
       </div>
 
-      {/* Weekly Contribution Chart */}
       <div className={`${styles["chart-section"]} ${styles["weekly-section"]}`}>
         <h3>Weekly Contributions by Repository</h3>
         {weeklyActivityData.length > 0 ? (

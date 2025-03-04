@@ -5,7 +5,6 @@ import {
   CommitFrequency,
 } from "../types/contribution.types";
 import { githubService } from "./githubService";
-import { GithubEvent } from "../types/github.types";
 
 export const contributionService = {
   getUserContributionStats: async (
@@ -13,7 +12,7 @@ export const contributionService = {
   ): Promise<ContributionStats> => {
     const repositories = await githubService.getUserRepos(username);
 
-    const commitActivityPromises = repositories
+    const commitActivityPromises = repositories.repos
       .filter((repo: any) => !repo.fork)
       .map(async (repo: any) => {
         try {
@@ -28,10 +27,9 @@ export const contributionService = {
       });
 
     const commitActivities = await Promise.all(commitActivityPromises);
-
     return {
-      totalRepos: repositories.length,
-      ownRepos: repositories.filter((repo: any) => !repo.fork).length,
+      totalRepos: repositories.repos.length,
+      ownRepos: repositories.repos.filter((repo: any) => !repo.fork).length,
       commitActivities,
     };
   },
@@ -39,9 +37,9 @@ export const contributionService = {
   getLanguageDistribution: async (
     username: string
   ): Promise<LanguageDistribution> => {
-    const repos = await githubService.getUserRepos(username);
+    const repositories = await githubService.getUserRepos(username);
 
-    const languagePromises = repos
+    const languagePromises = repositories.repos
       .filter((repo: any) => !repo.fork)
       .map(async (repo: any) => {
         try {
@@ -93,90 +91,5 @@ export const contributionService = {
       ),
       totalDays: Object.keys(dayFrequency).length,
     };
-  },
-
-  getUserContributionStatsFromEvents: async (
-    username: string
-  ): Promise<ContributionStats> => {
-    try {
-      const events = await githubService.getUserEvents(username);
-
-      console.log(`Total events fetched: ${events.length}`);
-
-      const pushEvents = events.filter((event) => event.type === "PushEvent");
-      const pullRequestEvents = events.filter(
-        (event) => event.type === "PullRequestEvent"
-      );
-      const issueEvents = events.filter(
-        (event) => event.type === "IssuesEvent"
-      );
-
-      console.log({
-        totalEvents: events.length,
-        pushCount: pushEvents.length,
-        pullRequestCount: pullRequestEvents.length,
-        issueCount: issueEvents.length,
-      });
-
-      return {
-        totalEvents: events.length,
-        pushCount: pushEvents.length,
-        pullRequestCount: pullRequestEvents.length,
-        issueCount: issueEvents.length,
-        mostActiveRepo: contributionService.findMostActiveRepo(events),
-      };
-    } catch (error) {
-      console.error("Detailed error in getUserContributionStatsFromEvents:", {
-        errorName: error.name,
-        errorMessage: error.message,
-        errorStack: error.stack,
-      });
-      throw error;
-    }
-  },
-
-  findMostActiveRepo: (events: GithubEvent[]): string => {
-    console.log("Finding most active repo from events:", events);
-
-    if (!Array.isArray(events)) {
-      console.error("Invalid events input: not an array", events);
-      return "";
-    }
-
-    try {
-      const repoActivityMap = events.reduce((acc, event) => {
-        if (!event || !event.repo || !event.repo.name) {
-          console.warn("Skipping invalid event:", event);
-          return acc;
-        }
-
-        const repoName = event.repo.name;
-        acc[repoName] = (acc[repoName] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>);
-
-      console.log("Repo activity map:", repoActivityMap);
-
-      if (Object.keys(repoActivityMap).length === 0) {
-        console.warn("No repository activity found");
-        return "";
-      }
-
-      const mostActiveRepo = Object.entries(repoActivityMap).reduce(
-        (mostActive, [repo, count]) =>
-          count > mostActive.count ? { repo, count } : mostActive,
-        { repo: "", count: 0 }
-      ).repo;
-
-      console.log("Most active repository:", mostActiveRepo);
-      return mostActiveRepo;
-    } catch (error) {
-      console.error("Error in findMostActiveRepo:", {
-        errorName: error.name,
-        errorMessage: error.message,
-        errorStack: error.stack,
-      });
-      return "";
-    }
   },
 };

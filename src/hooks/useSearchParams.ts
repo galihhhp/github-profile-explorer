@@ -1,41 +1,50 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from "react";
 
-export function useSearchParams<T extends string>(
-  key: string,
-  onParamChange?: (value: T | null) => void
+export function useSearchParams<T>(
+  paramName: string,
+  callback?: (value: T | null) => void
 ) {
-  const [paramValue, setParamValue] = useState<T | null>(null);
+  const getInitialValue = (): T | null => {
+    const params = new URLSearchParams(window.location.search);
+    const value = params.get(paramName);
+    return value as unknown as T;
+  };
+
+  const [paramValue, setParamValue] = useState<T | null>(getInitialValue());
+
+  const updateSearchParams = useCallback(
+    (newValue: T | null) => {
+      const url = new URL(window.location.href);
+      const params = new URLSearchParams(url.search);
+
+      if (newValue === null) {
+        params.delete(paramName);
+      } else {
+        params.set(paramName, String(newValue));
+      }
+
+      const newUrl = `${window.location.pathname}?${params.toString()}`;
+      window.history.pushState({}, "", newUrl);
+
+      setParamValue(newValue);
+    },
+    [paramName]
+  );
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const value = searchParams.get(key) as T;
+    const handlePopState = () => {
+      const newValue = getInitialValue();
+      setParamValue(newValue);
+      if (callback) callback(newValue);
+    };
 
-    if (value) {
-      setParamValue(value);
-      onParamChange?.(value);
-    }
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, [callback]);
+
+  useEffect(() => {
+    if (callback) callback(paramValue);
   }, []);
 
-  const updateSearchParams = (value: T | null) => {
-    const searchParams = new URLSearchParams(window.location.search);
-    if (value) {
-      searchParams.set(key, value);
-    } else {
-      searchParams.delete(key);
-    }
-
-    window.history.pushState(
-      {},
-      '',
-      `?${searchParams.toString()}`
-    );
-
-    setParamValue(value);
-    onParamChange?.(value);
-  };
-
-  return {
-    paramValue,
-    updateSearchParams
-  };
+  return { paramValue, updateSearchParams };
 }

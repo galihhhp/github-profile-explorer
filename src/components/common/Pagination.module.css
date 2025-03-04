@@ -1,0 +1,35 @@
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.pageButton {
+  padding: 0.5rem 0.8rem;
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pageButton:hover {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.pageButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pageButton:disabled:hover {
+  background-color: var(--card-background);
+  color: var(--text-primary);
+}
+
+.activePage {
+  background-color: var(--accent-color);
+  color: white;
+}

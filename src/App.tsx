@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useCallback } from "react";
 import { SearchBar } from "./components/common/SearchBar";
 import { UserProfile } from "./components/features/UserProfile";
-import { RepositoryList } from "./components/features/RepositoryList";
+import RepositoryList from "./components/features/RepositoryList";
 import styles from "./App.module.css";
 import { useGithubProfile } from "./hooks/useGithubProfile";
 import { useSearchParams } from "./hooks/useSearchParams";
@@ -12,40 +12,64 @@ const App: React.FC = () => {
   const contentRef = useRef<HTMLDivElement>(null);
   const errorRef = useRef<HTMLDivElement>(null);
 
-  const handleUserDataLoad = useCallback(
-    (username: string | null) => {
-      if (username) {
-        loadUserData(username);
-      }
-    },
-    [loadUserData]
-  );
+  const { paramValue: username, updateSearchParams: updateUsername } =
+    useSearchParams<string>("q");
+  const { paramValue: pageStr, updateSearchParams: updatePage } =
+    useSearchParams<string>("page");
+  const { paramValue: perPageStr, updateSearchParams: updatePerPage } =
+    useSearchParams<string>("perPage");
 
-  const { paramValue, updateSearchParams } = useSearchParams<string>(
-    "q",
-    handleUserDataLoad
-  );
+  const page = pageStr ? parseInt(pageStr, 10) : 1;
+  const perPage = perPageStr ? parseInt(perPageStr, 4) : 4;
 
-  const handleSearch = (username: string) => {
-    if (!username) return;
-    if (username.trim() === paramValue) return;
+  const handleUserDataLoad = useCallback(() => {
+    if (username) {
+      loadUserData(username, { page, perPage });
+    }
+  }, [loadUserData, username, page, perPage]);
 
-    updateSearchParams(username);
+  useEffect(() => {
+    handleUserDataLoad();
+  }, [username, page, perPage, handleUserDataLoad]);
+
+  const handleSearch = (searchUsername: string) => {
+    if (!searchUsername) return;
+    if (searchUsername.trim() === username) return;
+
+    updateUsername(searchUsername);
+    updatePage("1");
+  };
+
+  const handlePageChange = (newPage: number) => {
+    updatePage(newPage.toString());
   };
 
   const handleClear = () => {
-    updateSearchParams(null);
+    updateUsername(null);
+    updatePage(null);
+    updatePerPage(null);
   };
-
   useEffect(() => {
-    if (user && contentRef.current) {
-      contentRef.current.scrollIntoView({ behavior: "smooth" });
+    if (user && !loading && contentRef.current) {
+      const timer = setTimeout(() => {
+        contentRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 100);
+      return () => clearTimeout(timer);
     }
-    if (error && errorRef.current) {
-      errorRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [user, error]);
 
+    if (error && errorRef.current) {
+      const timer = setTimeout(() => {
+        errorRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [user, loading, error]);
   return (
     <div className={styles["app-container"]}>
       <div className={styles["hero-section"]}>
@@ -54,7 +78,7 @@ const App: React.FC = () => {
           onSearch={handleSearch}
           onClear={handleClear}
           placeholder="Enter GitHub username"
-          value={paramValue || ""}
+          value={username || ""}
         />
         {loading && (
           <div className={styles["loading-text"]}>Preparing data...</div>
@@ -80,7 +104,16 @@ const App: React.FC = () => {
           <div className={styles["content-wrapper"]}>
             <UserProfile user={user} />
             <ContributionDashboard username={user?.login} />
-            <RepositoryList repositories={repos} />
+            <RepositoryList
+              repositories={repos}
+              pagination={{
+                currentPage: page,
+                perPage: perPage,
+                totalCount: user.public_repos,
+                totalPages: Math.ceil(user.public_repos / perPage),
+              }}
+              onPageChange={handlePageChange}
+            />
           </div>
         </div>
       )}
