@@ -15,10 +15,19 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       <ReactMarkdown
         components={{
           h1: ({ children }) => (
-            <h1 className={styles["markdown-h1"]}>{children}</h1>
+            <h1 className={styles["markdown-h1"]}>
+              {children}
+            </h1>
           ),
           h2: ({ children }) => (
-            <h2 className={styles["markdown-h2"]}>{children}</h2>
+            <h2 className={styles["markdown-h2"]}>
+              {children}
+            </h2>
+          ),
+          h3: ({ children }) => (
+            <h3 className={styles["markdown-h3"]}>
+              {children}
+            </h3>
           ),
           a: ({ href, children }) => (
             <a
@@ -33,6 +42,15 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
             <code className={`${styles["markdown-code"]} ${className || ""}`}>
               {children}
             </code>
+          ),
+          pre: ({ children }) => (
+            <pre className={styles["markdown-pre"]}>{children}</pre>
+          ),
+          ul: ({ children }) => (
+            <ul className={styles["markdown-list"]}>{children}</ul>
+          ),
+          ol: ({ children }) => (
+            <ol className={styles["markdown-list"]}>{children}</ol>
           ),
         }}
         remarkPlugins={[remarkGfm]}>

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styles from "./RepositoryList.module.css";
+import theme from "../../styles/theme.module.css";
 import { MarkdownRenderer } from "../common/MarkdownRenderer";
 import { GithubRepoWithReadme } from "../../types/github.types";
 
@@ -19,14 +20,13 @@ export const RepositoryList: React.FC<RepositoryListProps> = ({
   };
 
   return (
-    <div className={styles["repository-list"]}>
+    <div className={`${theme.container}`}>
+      <h2 className={theme["gradient-heading"]}>Repositories</h2>
       {repositories.map((repo) => (
         <div
           key={repo.id}
-          className={`
-              ${styles["repository-card"]} 
-              ${activeRepoId === repo.id ? styles["active"] : ""}
-            `}>
+          className={`${styles["repository-card"]} 
+            ${activeRepoId === repo.id ? styles.active : ""}`}>
           <div
             className={styles["repository-header"]}
             onClick={() => toggleRepo(repo.id)}>
@@ -49,6 +49,7 @@ export const RepositoryList: React.FC<RepositoryListProps> = ({
             <div className={styles["repo-details"]}>
               {repo.language && <span>Language: {repo.language}</span>}
               <span>Stars: {repo.stargazers_count}</span>
+              <span>Forks: {repo.forks_count}</span>
             </div>
 
             <div className={styles["readme-content"]}>

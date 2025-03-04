@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface GithubUser {
   login: string;
   name: string;
@@ -21,4 +22,24 @@ export interface GithubRepo {
 
 export interface GithubRepoWithReadme extends GithubRepo {
   readme?: string;
+  forks_count?: number;
+}
+
+export interface GithubEvent {
+  id: string;
+  type: string;
+  actor: {
+    id: number;
+    login: string;
+    display_login?: string;
+    avatar_url: string;
+  };
+  repo: {
+    id: number;
+    name: string;
+    url: string;
+  };
+  payload: Record<string, any>;
+  public: boolean;
+  created_at: string;
 }

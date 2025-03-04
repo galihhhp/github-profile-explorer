@@ -2,8 +2,13 @@
   width: 100%;
   max-width: 100%;
   display: flex;
-  background-color: var(--yellow);
+  flex-direction: column;
   padding: 1.5rem;
+}
+
+.profile-header {
+  display: flex;
+  margin-bottom: 1.5rem;
 }
 
 .avatar {
@@ -11,42 +16,49 @@
   height: 120px;
   object-fit: cover;
   margin-right: 1.5rem;
+  border-radius: 8px;
 }
 
-.user-info {
+.profile-info {
   flex-grow: 1;
 }
 
+.username {
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+}
+
 .bio {
-  color: #666;
+  color: var(--text-secondary);
   margin: 0.5rem 0;
 }
 
-.stats {
+.stats-row {
   display: flex;
-  gap: 1rem;
-  color: #3498db;
-  font-weight: bold;
+  gap: 2rem;
+  margin: 1rem 0;
 }
 
-.visit-button {
-  display: inline-block;
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  background-color: #2ecc71;
-  color: white;
-  text-decoration: none;
-  border-radius: 4px;
-  font-weight: 600;
-  transition: background-color 0.2s ease;
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.visit-button:hover {
-  background-color: #27ae60;
+.stat-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-heading);
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
 }
 
 @media (max-width: 768px) {
-  .profile-container {
+  .profile-header {
     flex-direction: column;
     align-items: center;
     text-align: center;
@@ -57,9 +69,10 @@
     margin-bottom: 1rem;
   }
 
-  .stats {
-    flex-direction: column;
-    align-items: center;
+  .stats-row {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
   }
 }
 

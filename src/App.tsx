@@ -1,19 +1,29 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useCallback } from "react";
 import { SearchBar } from "./components/common/SearchBar";
 import { UserProfile } from "./components/features/UserProfile";
 import { RepositoryList } from "./components/features/RepositoryList";
 import styles from "./App.module.css";
+import { useGithubProfile } from "./hooks/useGithubProfile";
 import { useSearchParams } from "./hooks/useSearchParams";
-import { useUserStore } from "./stores/userStore";
+import { ContributionDashboard } from "./components/features/ContributionDashboard";
 
 const App: React.FC = () => {
-  const { user, repos, loading, error, fetchUserData } = useUserStore();
+  const { user, repos, loading, error, loadUserData } = useGithubProfile();
   const contentRef = useRef<HTMLDivElement>(null);
   const errorRef = useRef<HTMLDivElement>(null);
 
+  const handleUserDataLoad = useCallback(
+    (username: string | null) => {
+      if (username) {
+        loadUserData(username);
+      }
+    },
+    [loadUserData]
+  );
+
   const { paramValue, updateSearchParams } = useSearchParams<string>(
     "q",
-    fetchUserData
+    handleUserDataLoad
   );
 
   const handleSearch = (username: string) => {
@@ -69,6 +79,7 @@ const App: React.FC = () => {
         <div ref={contentRef} className={styles["content-section"]}>
           <div className={styles["content-wrapper"]}>
             <UserProfile user={user} />
+            <ContributionDashboard username={user?.login} />
             <RepositoryList repositories={repos} />
           </div>
         </div>
