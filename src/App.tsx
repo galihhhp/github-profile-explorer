@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback } from "react";
+import React, { useEffect, useRef, useCallback, useState } from "react";
 import { SearchBar } from "./components/common/SearchBar";
 import { UserProfile } from "./components/features/UserProfile";
 import RepositoryList from "./components/features/RepositoryList";
@@ -6,11 +6,13 @@ import styles from "./App.module.css";
 import { useGithubProfile } from "./hooks/useGithubProfile";
 import { useSearchParams } from "./hooks/useSearchParams";
 import { ContributionDashboard } from "./components/features/ContributionDashboard";
+import { Tabs } from "./components/common/Tabs";
 
 const App: React.FC = () => {
   const { user, repos, loading, error, loadUserData } = useGithubProfile();
   const contentRef = useRef<HTMLDivElement>(null);
   const errorRef = useRef<HTMLDivElement>(null);
+  const [activeTab, setActiveTab] = useState("repos");
 
   const { paramValue: username, updateSearchParams: updateUsername } =
     useSearchParams<string>("q");
@@ -42,6 +44,10 @@ const App: React.FC = () => {
 
   const handlePageChange = (newPage: number) => {
     updatePage(newPage.toString());
+  };
+
+  const handleTabChange = (tabId: string | number) => {
+    setActiveTab(tabId as string);
   };
 
   const handleClear = () => {
@@ -103,17 +109,24 @@ const App: React.FC = () => {
         <div ref={contentRef} className={styles["content-section"]}>
           <div className={styles["content-wrapper"]}>
             <UserProfile user={user} />
-            <ContributionDashboard username={user?.login} />
-            <RepositoryList
-              repositories={repos}
-              pagination={{
-                currentPage: page,
-                perPage: perPage,
-                totalCount: user.public_repos,
-                totalPages: Math.ceil(user.public_repos / perPage),
-              }}
-              onPageChange={handlePageChange}
-            />
+            <Tabs defaultTabId="first" onChange={handleTabChange}>
+              <Tabs.Tab id="repos" label="Repositories">
+                <RepositoryList
+                  repositories={repos}
+                  pagination={{
+                    currentPage: page,
+                    perPage: perPage,
+                    totalCount: user.public_repos,
+                    totalPages: Math.ceil(user.public_repos / perPage),
+                  }}
+                  onPageChange={handlePageChange}
+                />
+              </Tabs.Tab>
+
+              <Tabs.Tab id="contributions" label="Contributions">
+                <ContributionDashboard username={user?.login} />
+              </Tabs.Tab>
+            </Tabs>
           </div>
         </div>
       )}

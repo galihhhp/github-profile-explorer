@@ -1,0 +1,58 @@
+.tabsContainer {
+  width: 100%;
+}
+
+.tabList {
+  display: flex;
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+  margin-bottom: 1rem;
+  overflow-x: auto;
+  scrollbar-width: none; /* For Firefox */
+}
+
+.tabList::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Opera */
+}
+
+.tabButton {
+  padding: 0.75rem 1.25rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--text-secondary, #64748b);
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.tabButton:hover:not(:disabled) {
+  color: var(--text-primary, #334155);
+}
+
+.tabButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.activeTab {
+  color: var(--accent-color, #6366f1);
+  border-bottom-color: var(--accent-color, #6366f1);
+}
+
+.tabPanels {
+  min-height: 200px;
+}
+
+.tabPanel {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
