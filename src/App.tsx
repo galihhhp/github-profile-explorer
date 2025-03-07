@@ -109,7 +109,7 @@ const App: React.FC = () => {
         <div ref={contentRef} className={styles["content-section"]}>
           <div className={styles["content-wrapper"]}>
             <UserProfile user={user} />
-            <Tabs defaultTabId="first" onChange={handleTabChange}>
+            <Tabs defaultTabId={activeTab} onChange={handleTabChange}>
               <Tabs.Tab id="repos" label="Repositories">
                 <RepositoryList
                   repositories={repos}

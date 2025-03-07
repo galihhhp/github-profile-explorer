@@ -152,7 +152,7 @@ export const ContributionDashboard: React.FC<ContributionDashboardProps> = ({
                   label={({ name, percentage }) => `${name}: ${percentage}%`}>
                   {languagePieData.map((entry, index) => (
                     <Cell
-                      key={`cell-${index}`}
+                      key={`cell-${index}-${entry.name}`}
                       fill={COLORS[index % COLORS.length]}
                     />
                   ))}
@@ -218,7 +218,7 @@ export const ContributionDashboard: React.FC<ContributionDashboardProps> = ({
               <YAxis />
               <Tooltip
                 formatter={(value, name, props) => [
-                  `${value} commits`,
+                  `${value} ${name} commits`,
                   props.payload.repo,
                 ]}
               />
